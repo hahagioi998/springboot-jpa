@@ -8,7 +8,8 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.Optional;
 
-public interface Specificationable<T> extends Specification<T> {
+public interface
+Specificationable<T> extends Specification<T> {
 
     Specification<T> specification();
 

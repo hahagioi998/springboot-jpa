@@ -49,12 +49,55 @@ Specificationable<T> extends Specification<T> {
                 .orElseGet(EmptySpecification::new);
     }
 
+    default <V extends Comparable<? super V>> Specification<T> gte(String column, V value) {
+        return (root, q, builder) -> builder.greaterThanOrEqualTo(root.get(column), value);
+    }
+
+    default <V extends Comparable<? super V>> Specification<T> gte(String column, Optional<V> optional) {
+        return optional.map(v -> gte(column, v))
+                .orElseGet(EmptySpecification::new);
+    }
+
     default <V extends Comparable<? super V>> Specification<T> lt(String column, V value) {
         return (root, q, builder) -> builder.lessThan(root.get(column), value);
     }
 
     default <V extends Comparable<? super V>> Specification<T> lt(String column, Optional<V> optional) {
         return optional.map(v -> lt(column, v))
+                .orElseGet(EmptySpecification::new);
+    }
+
+    default <V extends Comparable<? super V>> Specification<T> lte(String column, V value) {
+        return (root, q, builder) -> builder.lessThanOrEqualTo(root.get(column), value);
+    }
+
+    default <V extends Comparable<? super V>> Specification<T> lte(String column, Optional<V> optional) {
+        return optional.map(v -> lte(column, v))
+                .orElseGet(EmptySpecification::new);
+    }
+
+    default <V extends Comparable<? super V>> Specification<T> isNull(String column) {
+        return (root, q, builder) -> builder.isNull(root.get(column));
+    }
+
+    default <V extends Comparable<? super V>> Specification<T> isNotNull(String column) {
+        return (root, q, builder) -> builder.isNull(root.get(column).isNotNull());
+    }
+
+    default <V extends Comparable<? super V>> Specification<T> isTrue(String column) {
+        return (root, q, builder) -> builder.isTrue(root.get(column));
+    }
+
+    default <V extends Comparable<? super V>> Specification<T> isFalse(String column) {
+        return (root, q, builder) -> builder.isFalse(root.get(column));
+    }
+
+    default <V extends Comparable<? super V>> Specification<T> like(String column, String pattern) {
+        return (root, q, builder) -> builder.like(root.get(column), pattern);
+    }
+
+    default <V extends Comparable<? super V>> Specification<T> like(String column, Optional<String> optional) {
+        return optional.map(v -> like(column, v))
                 .orElseGet(EmptySpecification::new);
     }
 

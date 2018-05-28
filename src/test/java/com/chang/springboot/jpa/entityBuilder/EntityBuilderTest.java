@@ -23,6 +23,7 @@ public class EntityBuilderTest {
     public void builderTest() {
         mockEntityBuilder
                 .validate(mockValidateService.existsNameValidate())
+                .passwordEncode()
                 .build(m -> Assert.assertThat(m.getName(), is("chang")));
     }
 
@@ -62,6 +63,11 @@ public class EntityBuilderTest {
 
         public String getName() {
             return name;
+        }
+
+        public MockEntityBuilder passwordEncode() {
+            this.name = name + "";
+            return this;
         }
 
         @Override

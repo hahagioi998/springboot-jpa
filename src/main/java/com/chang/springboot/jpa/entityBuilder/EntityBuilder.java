@@ -2,19 +2,13 @@ package com.chang.springboot.jpa.entityBuilder;
 
 import java.util.function.Consumer;
 
-public interface EntityBuilder<T> {
+public interface EntityBuilder<E> extends EntityValidator<E> {
 
-    T build();
+    E build();
 
-    default T build(Consumer<T> complete) {
-        T t =  build();
+    default E build(Consumer<E> complete) {
+        E t =  build();
         complete.accept(t);
         return t;
-    }
-
-    @SuppressWarnings("unchecked")
-    default <V extends EntityBuilder<T>> V validate(ValidateFunction<V> validateFunction) {
-        validateFunction.validate((V) this);
-        return (V)this;
     }
 }

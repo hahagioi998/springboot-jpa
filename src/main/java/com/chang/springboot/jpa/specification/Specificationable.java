@@ -1,11 +1,9 @@
 package com.chang.springboot.jpa.specification;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.StringUtils;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.Optional;
 
 public interface
@@ -93,12 +91,33 @@ Specificationable<T> extends Specification<T> {
     }
 
     default <V extends Comparable<? super V>> Specification<T> like(String column, String pattern) {
-        return (root, q, builder) -> builder.like(root.get(column), pattern);
+        return (root, q, builder) -> builder.like(getPath(root, column), pattern);
     }
 
     default <V extends Comparable<? super V>> Specification<T> like(String column, Optional<String> optional) {
-        return optional.map(v -> like(column, v))
+        return optional
+                .filter(StringUtils::hasText)
+                .map(v -> like(column, v))
                 .orElseGet(EmptySpecification::new);
+    }
+
+    default <V extends Comparable<? super V>> Specification<T> containing(String column, String pattern) {
+        return like(column, "%" + pattern + "%");
+    }
+
+    default <V extends Comparable<? super V>> Specification<T> containing(String column, Optional<String> optional) {
+        return optional
+                .filter(StringUtils::hasText)
+                .map(v -> containing(column, v))
+                .orElseGet(EmptySpecification::new);
+    }
+
+    default Expression<String> getPath(Root<T> root, String column) {
+        Path e = root;
+        for(String s : column.split("[.]")) {
+            e = e.get(s);
+        }
+        return e;
     }
 
     class EmptySpecification implements Specification {

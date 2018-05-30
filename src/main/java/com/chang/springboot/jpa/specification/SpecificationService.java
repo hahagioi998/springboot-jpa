@@ -23,6 +23,10 @@ public interface SpecificationService<T, ID> {
         return getRepository().findAll(s);
     }
 
+    default Page<T> findAll(PageSpecificationable<T> s) {
+        return getRepository().findAll(s, s.pageable());
+    }
+
     default Page<T> findAll(Specification<T> s, Pageable pageable) {
         return getRepository().findAll(s, pageable);
     }

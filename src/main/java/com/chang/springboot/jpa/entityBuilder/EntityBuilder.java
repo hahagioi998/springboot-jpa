@@ -11,4 +11,19 @@ public interface EntityBuilder<E> extends EntityValidator<E> {
         complete.accept(t);
         return t;
     }
+
+    @SuppressWarnings("unchecked")
+    default <V extends EntityBuilder<E>> V validate(ValidateFunction<V> validateFunction) {
+        validateFunction.validate((V) this);
+        return (V)this;
+    }
+
+    class LazyBuilder<E> implements EntityBuilder<E> {
+
+
+        @Override
+        public E build() {
+            return null;
+        }
+    }
 }

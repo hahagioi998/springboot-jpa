@@ -3,6 +3,7 @@ package com.chang.springboot.jpa.entityBuilder;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public interface EntityUpdator<E> extends EntityValidator<E> {
@@ -19,6 +20,7 @@ public interface EntityUpdator<E> extends EntityValidator<E> {
                 .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
 
         modelMapper.map(this, entity);
+
         return entity;
     }
 }
